@@ -9,8 +9,11 @@ templates, plus the `fleet/` config pieces and `setup.sh` installed by this READ
 
 ## Install on a new device — one command
 
+**Run from your home directory** (`cd ~` first) — the skills CLI installs into paths relative to
+the current directory:
+
 ```bash
-npx skills add jnae659/delegate-skills && \
+cd ~ && npx skills add jnae659/delegate-skills && \
   curl -fsSL https://raw.githubusercontent.com/jnae659/delegate-skills/main/setup.sh | bash
 ```
 
