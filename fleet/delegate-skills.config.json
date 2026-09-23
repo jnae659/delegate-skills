@@ -1,0 +1,27 @@
+{
+  "version": "delegate-fleet.v1",
+  "lanes": {
+    "feature": {
+      "implementer": "opencode",
+      "model": "minimax-coding-plan/MiniMax-M3",
+      "variant": "high"
+    },
+    "tests": {
+      "implementer": "opencode",
+      "model": "zai-coding-plan/glm-5.3-flash"
+    },
+    "fast": {
+      "implementer": "opencode",
+      "model": "opencode/nemotron-3.5-lightning-free"
+    },
+    "complex": {
+      "implementer": "opencode",
+      "model": "zai-coding-plan/glm-5.3-flash",
+      "variant": "high"
+    },
+    "e2e": {
+      "implementer": "opencode",
+      "model": "opencode/big-pickle"
+    }
+  }
+}

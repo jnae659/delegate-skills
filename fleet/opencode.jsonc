@@ -1,0 +1,22 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "permission": {
+    "skill": {
+      "ui-ux-pro-max": "allow"
+    },
+    "bash": {
+      "*relay.mjs*": "deny",
+      "opencode run*": "deny",
+      "opencode run": "deny",
+      "*migrate:fresh*": "deny",
+      "*migrate:refresh*": "deny",
+      "*db:wipe*": "deny"
+    }
+  },
+  "mcp": {
+    "chrome-devtools": {
+      "type": "local",
+      "command": ["npx", "-y", "chrome-devtools-mcp@latest"]
+    }
+  }
+}
