@@ -13,6 +13,19 @@
   - `e2e` — end-to-end coverage, browser-level (runs on `opencode/big-pickle`)
 
   If I name a lane, use exactly that one.
+- **Per-item routing — never ask me to pick a lane.** When a slice/phase/task list mixes kinds of
+  work, split it by item and route each group yourself, then announce the routing table
+  (item → lane → model) and proceed:
+  - DB / backend / API / UI implementation items → one implementation brief on `feature`, or on
+    `complex` if any item in the group is complex-grade (migrations, concurrency, security,
+    money-path) — the riskiest item sets the group's lane.
+  - Test-writing items → `tests`. Mechanical sweeps → `fast`.
+  - Manual walkthrough / browser-flow / "E2E" items → a separate `e2e` dispatch, run AFTER the
+    implementation brief lands (it verifies the landed code; e2e rules apply).
+  - "Run the tests" items (e.g. `php artisan test --filter=…`) are gates — you run them yourself,
+    never a dispatch.
+  Ask only when an item fits no lane at all. A lane question with a "(Recommended)" option means
+  you already know the answer — take it and state it instead.
 - **Lane truth = the config file only.** Memory notes and chat history describing lane→model
   mappings are historical — always re-read `~/.config/delegate-skills/config.json` before
   choosing a lane or announcing its model.
