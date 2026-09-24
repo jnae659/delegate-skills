@@ -5,7 +5,8 @@ never blind-copy upstream over it.
 
 Fork changes: `nestedDispatch` tripwire in `opencode-delegate/scripts/relay.mjs`, mandatory
 `<no_nesting>` brief blocks, `<parallel_plan>` support, destructive-DB-reset ban in brief
-templates, plus the `fleet/` config pieces and `setup.sh` installed by this README.
+templates, Quick-defaults-preserves-existing-map in `delegate-setup`, plus the new `fleet-setup`
+skill (bundled fleet config) and `setup.sh`.
 
 ## Install on a new device — one command
 
@@ -13,13 +14,11 @@ templates, plus the `fleet/` config pieces and `setup.sh` installed by this READ
 the current directory:
 
 ```bash
-cd ~ && npx skills add jnae659/delegate-skills && \
-  curl -fsSL https://raw.githubusercontent.com/jnae659/delegate-skills/main/setup.sh | bash
+cd ~ && npx skills add jnae659/delegate-skills
 ```
 
-- `npx skills add` installs the four skills (`claude-delegate`, `opencode-delegate`,
-  `delegate-setup`, `find-skills`).
-- `setup.sh` installs the rest of the fleet and is idempotent (backups, never silent clobber):
+Then open Claude Code and run **`/fleet-setup`** once — it installs the rest of the fleet from the
+`fleet-setup` skill's bundled payload (idempotent; backs up existing files first):
 
 | Piece | Lands at |
 |---|---|
@@ -28,10 +27,18 @@ cd ~ && npx skills add jnae659/delegate-skills && \
 | Fleet rules (CLAUDE.md) | `~/.claude/CLAUDE.md` |
 | `export OPENCODE_DISABLE_CLAUDE_CODE=1` | `~/.zshrc` |
 
+No `/delegate-setup` needed — your lane map is already installed. If you do run it, **Quick
+defaults keeps your existing lanes**.
+
+Alternative without Claude Code (same result, pure shell — installs the same four pieces,
+idempotent, backs up before overwriting):
+
+```bash
+cd ~ && npx skills add jnae659/delegate-skills && \
+  curl -fsSL https://raw.githubusercontent.com/jnae659/delegate-skills/main/setup.sh | bash
+```
+
 Then finish by hand: `opencode auth login` (each provider) and your Claude Code routing.
-You do **not** need to run `/delegate-setup` — setup.sh already installed your lane map. If you do
-run it, **Quick defaults keeps your existing lanes** (it only proposes a change for an implementer
-that is missing or not authenticated on that device).
 
 ## ⚠️ On the dev machine: never `npx skills add` this repo
 
@@ -46,8 +53,9 @@ git -C ~/.claude/skills pull
 ## Repo layout
 
 The git root **is** `~/.claude/skills`, so every fork edit is a tracked diff — no copy/sync step.
-`fleet/`, `setup.sh`, and this README are ignored by the skills CLI (it only installs dirs
-containing `SKILL.md`).
+Five skills: `claude-delegate`, `opencode-delegate`, `delegate-setup`, `find-skills`, and
+`fleet-setup` (which bundles the fleet config in its `fleet/` dir). `setup.sh` and this README
+are ignored by the skills CLI (it only installs dirs containing `SKILL.md`).
 
 No secrets live in this repo: `~/.claude/settings.json` (API token) and OpenCode's `auth.json`
 are outside the repo root and are never committed.

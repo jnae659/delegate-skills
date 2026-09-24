@@ -1,18 +1,19 @@
 #!/usr/bin/env bash
 # Fleet setup — installs the non-skill fleet pieces from jnae659/delegate-skills.
 # Skills themselves are installed by:  npx skills add jnae659/delegate-skills
-# Idempotent: safe to run twice. Respects $HOME (sandbox-testable).
+# Preferred path is the /fleet-setup skill inside Claude Code; this script is the
+# no-Claude alternative. Idempotent: safe to run twice. Respects $HOME.
 set -euo pipefail
 
 # Where this script's fleet/ dir is — works whether run from a clone or piped via curl
 # (when piped, it re-downloads the three pieces from the repo's main branch).
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
-FLEET_DIR="$SCRIPT_DIR/fleet"
+FLEET_DIR="$SCRIPT_DIR/fleet-setup/fleet"
 REPO_RAW="https://raw.githubusercontent.com/jnae659/delegate-skills/main"
 if [ ! -d "$FLEET_DIR" ]; then
   FLEET_DIR="$(mktemp -d)/fleet"; mkdir -p "$FLEET_DIR"
   for f in delegate-skills.config.json opencode.jsonc CLAUDE.md; do
-    curl -fsSL "$REPO_RAW/fleet/$f" -o "$FLEET_DIR/$f"
+    curl -fsSL "$REPO_RAW/fleet-setup/fleet/$f" -o "$FLEET_DIR/$f"
   done
 fi
 
