@@ -118,7 +118,7 @@ import {
 } from "node:fs";
 import {basename, delimiter, join, relative, resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { constants as osConstants, tmpdir } from "node:os";
+import { constants as osConstants, tmpdir, homedir } from "node:os";
 import { StringDecoder } from "node:string_decoder";
 import { TextDecoder } from "node:util";
 
@@ -195,11 +195,36 @@ function makeEventScanner(onObject) {
   };
 }
 
+function laneResolverScript() {
+  const relayDir = dirname(fileURLToPath(import.meta.url));
+  let realDir = relayDir;
+  try {
+    realDir = dirname(realpathSync(join(relayDir, "relay.mjs")));
+  } catch {
+    /* keep the symlink-relative path */
+  }
+  const candidates = [
+    join(relayDir, "../../delegate-setup/scripts/lane.mjs"),
+    join(realDir, "../../delegate-setup/scripts/lane.mjs"),
+    join(homedir(), ".claude/skills/delegate-setup/scripts/lane.mjs"),
+    join(homedir(), ".agents/skills/delegate-setup/scripts/lane.mjs"),
+    process.env.DELEGATE_SETUP_DIR ? join(process.env.DELEGATE_SETUP_DIR, "scripts/lane.mjs") : null,
+  ].filter(Boolean);
+  for (const candidate of candidates) {
+    if (existsSync(candidate)) return candidate;
+  }
+  return { missing: candidates };
+}
+
 function applyFleetLane(opts, flagged) {
   if (!opts.lane) return;
-  const script = join(dirname(fileURLToPath(import.meta.url)), "../../delegate-setup/scripts/lane.mjs");
-  if (!existsSync(script)) {
-    fail("--lane requires the delegate-setup skill installed beside this relay");
+  const script = laneResolverScript();
+  if (typeof script !== "string") {
+    fail(
+      `--lane could not find the delegate-setup skill. Tried:\n  ${script.missing.join("\n  ")}\n` +
+        "Re-run `npx skills add jnae659/delegate-skills` and select ALL skills (delegate-setup included), " +
+        "or pass --model/--variant directly.",
+    );
   }
   const r = spawnSync(
     process.execPath,
