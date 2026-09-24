@@ -82,7 +82,12 @@ anything — one question, three options, not a wizard:
 > conversations) and let the numbers place your lanes — if one CLI dominates, expect one question
 > about its role. Happy to do 2 and 3 together.
 
-- **Quick defaults** → propose immediately.
+- **Quick defaults** → propose immediately. **If step 2 loaded an existing global map, Quick
+  defaults proposes keeping it unchanged** — every lane carries Basis
+  `existing config — your standing choice` and the one-line why is "unchanged". Propose a change
+  only for a lane whose implementer is missing or unauthenticated on this device, as the minimal
+  fix, labeled with what changed and why. With no existing map, propose a full opinion map as
+  usual.
 - **Interview** → the four questions (allocation policy, never model rankings) and how to ask them
   (one medium per round) live in [references/setup-dialogue.md](references/setup-dialogue.md) — read
   it before you ask.
@@ -98,6 +103,8 @@ decide:
 
 - **Quick defaults** — the user hired your opinion. A full map is legitimate, dials included; label
   every lane `my opinion`, say plainly that the map is your opinion, and keep it cheap to revise.
+  But an existing approved map outranks your opinion — it is the user's prior explicit choice, so
+  with a map already loaded "quick" means confirm it, not re-decide it.
 - **Interview / usage scan** — evidence modes, so **every** dial is gated (rule 7): set one only from
   the user’s answer, or where the schema requires it (opencode lanes require `model`). Omitting is
   always safe — every dial has a default the user already lives with, and a CLI’s configured default

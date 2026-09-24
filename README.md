@@ -29,6 +29,9 @@ cd ~ && npx skills add jnae659/delegate-skills && \
 | `export OPENCODE_DISABLE_CLAUDE_CODE=1` | `~/.zshrc` |
 
 Then finish by hand: `opencode auth login` (each provider) and your Claude Code routing.
+You do **not** need to run `/delegate-setup` — setup.sh already installed your lane map. If you do
+run it, **Quick defaults keeps your existing lanes** (it only proposes a change for an implementer
+that is missing or not authenticated on that device).
 
 ## ⚠️ On the dev machine: never `npx skills add` this repo
 
