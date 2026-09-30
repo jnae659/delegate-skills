@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Fleet setup — installs the non-skill fleet pieces from jnae659/delegate-skills.
-# Skills themselves are installed by:  npx skills add jnae659/delegate-skills
+# Skills themselves are installed by:  npx skills add jnae659/delegate-skills -g -s '*' -a claude-code -y
 # Preferred path is the /fleet-setup skill inside Claude Code; this script is the
 # no-Claude alternative. Idempotent: safe to run twice. Respects $HOME.
 set -euo pipefail

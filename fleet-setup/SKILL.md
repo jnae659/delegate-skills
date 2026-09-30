@@ -16,8 +16,9 @@ metadata:
 # Fleet Setup
 
 You install the fleet's **non-skill pieces** from this skill's bundled payload into the user's
-home directory. The skills themselves arrived via `npx skills add jnae659/delegate-skills` — this
-skill completes the installation.
+home directory. The skills themselves arrived via
+`npx skills add jnae659/delegate-skills -g -s '*' -a claude-code -y` (all five skills, no upstream
+`amElnagdy` install needed) — this skill completes the installation.
 
 (`<skill-dir>` is this skill's install directory — the folder containing this `SKILL.md`. The
 payload is `<skill-dir>/fleet/`.)

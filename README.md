@@ -10,12 +10,17 @@ skill (bundled fleet config) and `setup.sh`.
 
 ## Install on a new device — one command
 
-**Run from your home directory** (`cd ~` first) — the skills CLI installs into paths relative to
-the current directory:
+This fork already contains every upstream skill (with the fork's edits) — **do not** install
+`amElnagdy/delegate-skills` first. One non-interactive command installs all five skills globally:
 
 ```bash
-cd ~ && npx skills add jnae659/delegate-skills
+npx skills add jnae659/delegate-skills -g -s '*' -a claude-code -y
 ```
+
+`-g` global (works from any directory) · `-s '*'` all skills, no picker · `-a claude-code` only
+Claude Code (add e.g. `-a claude-code opencode` for more agents) · `-y` no prompts. Without `-s '*'`
+/ `-y` the CLI asks "Select skills to install" with nothing ticked — picking only `fleet-setup`
+leaves the delegate skills missing.
 
 Then open Claude Code and run **`/fleet-setup`** once — it installs the rest of the fleet from the
 `fleet-setup` skill's bundled payload (idempotent; backs up existing files first):
@@ -34,7 +39,7 @@ Alternative without Claude Code (same result, pure shell — installs the same f
 idempotent, backs up before overwriting):
 
 ```bash
-cd ~ && npx skills add jnae659/delegate-skills && \
+npx skills add jnae659/delegate-skills -g -s '*' -a claude-code -y && \
   curl -fsSL https://raw.githubusercontent.com/jnae659/delegate-skills/main/setup.sh | bash
 ```
 
