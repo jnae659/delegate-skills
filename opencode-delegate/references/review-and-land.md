@@ -21,7 +21,10 @@ the run; green is only meaningful if the yardstick wasn't shortened.
 ## Re-run the gates yourself
 
 `result.json` carries OpenCode's own claim that the gates passed. Treat that as a claim, not evidence —
-re-run the project's actual test/lint/build commands in the working tree and read the output. And keep
+re-run the project's actual test/lint/build commands in the working tree and read the output. The
+implementer only ran targeted tests and formatted its changed files (see
+[writing-the-brief.md](writing-the-brief.md)), so this is where the **full suite** runs — once, with the
+repo's parallel runner (e.g. `php artisan test --parallel --processes=8`), plus build/typecheck. And keep
 the result in proportion: **passing is necessary, not sufficient.** An implementer can *game* a gate,
 not just misreport it — that is what the test check above and the sweep below exist to catch.
 

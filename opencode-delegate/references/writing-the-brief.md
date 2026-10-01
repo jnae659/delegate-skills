@@ -39,11 +39,12 @@ wandering into unrelated refactors.
 </task>
 
 <verification_loop>
-Run these before finishing and fix anything they surface, don't just report it:
-  <the project's real test command>
-  <the project's real lint/format command>
-  <the project's real build/typecheck command>
-Confirm the working tree shows only the intended changes afterward.
+Implement → targeted tests → format changed files → finish. Specifically:
+  <the project's real test command, scoped to the tests covering the touched code (--filter / test dir)>
+  <the project's real formatter, on the changed files only>
+Run the targeted tests to green and fix what they surface. Do NOT run the full test suite or the
+build — the orchestrator runs those once, in parallel, at its gate. Don't re-run suites unrelated
+to your change. Confirm the working tree shows only the intended changes afterward.
 </verification_loop>
 
 <action_safety>
@@ -105,6 +106,21 @@ report you can read: it tells OpenCode to end with a written summary, so the res
 `npm run lint`, `cargo test`, `pytest -q`, whatever it is). A brief that says "run the tests" without
 naming them gets you an OpenCode that guesses — or skips.
 
+## Split the gates: targeted for the implementer, full for the orchestrator
+
+The implementer's loop is **implement → targeted tests → format changed files → finish**. Scope
+its test command to the code it touches (a `--filter`, a test directory) and its formatter to the
+changed files. Never ask it to run the full suite or the build: profiling showed repeated full and
+sequential suite runs inside the implementer dominated wall time (91 of 114 minutes on one run),
+and the orchestrator re-runs everything anyway. The **orchestrator's gate** runs the full suite
+once, with the repo's parallel runner (e.g. `php artisan test --parallel --processes=8`), plus
+build/typecheck, then reviews the diff and commits.
+
+When the implementer works in a git worktree, make sure the worktree carries everything the test
+runner relies on that may be untracked or newer than the branch point — e.g. a schema dump
+(`database/schema/*.sql`). Without it, every database-refreshing test replays all migrations and a
+three-file test directory can take 10–20 minutes.
+
 ## Honor the repo's conventions
 
 OpenCode reads the repo's `AGENTS.md` automatically, so house rules there (style, forbidden patterns,
@@ -140,9 +156,9 @@ data models untouched.
 </task>
 
 <verification_loop>
-Run and make green before finishing:
-  pytest tests/billing/ -q
-  ruff check services/billing/
+Run and make green before finishing (targeted only — the orchestrator runs the full suite):
+  pytest tests/billing/test_refund.py -q
+  ruff format services/billing/refund.py tests/billing/test_refund.py
 Confirm git status shows only refund.py and its test file changed.
 </verification_loop>
 

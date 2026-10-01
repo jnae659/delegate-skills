@@ -3,8 +3,7 @@
   "lanes": {
     "feature": {
       "implementer": "opencode",
-      "model": "minimax-coding-plan/MiniMax-M3",
-      "variant": "high"
+      "model": "minimax-coding-plan/MiniMax-M3"
     },
     "tests": {
       "implementer": "opencode",
