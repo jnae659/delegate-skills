@@ -67,6 +67,8 @@
   chrome-devtools MCP (when available and the app can be served) to drive the real UI and verify
   flows interactively — then write those verified flows as permanent automated tests
   (Playwright/Cypress per repo convention). MCP is for discovery; the suite is the deliverable.
+  Never use a route crawler / smoke script (e.g. `scripts/route_smoke.php`) as verification of a
+  flow — it only proves pages return non-5xx; flows get real browser specs.
 - **E2E watchdog — kill-fast:** e2e dispatches run with `--timeout 45m`, never 2h. On timeout,
   resume (`--resume-last`) with a delta brief carrying the dead run's finalMessage — kill-fast +
   resume beats one long run.

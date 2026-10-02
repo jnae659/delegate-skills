@@ -34,6 +34,8 @@ For changes with their own verification shape, go further:
   drift, rather than trusting that "the migration is reversible."
 - **Removals / renames:** grep the codebase for dangling references to whatever was removed.
 - **Anything stateful:** exercise the actual behavior, don't just confirm it compiles.
+- **User-facing flows:** verify with real browser specs (Playwright/Cypress), never a route crawler or
+  smoke script — a crawler only proves pages don't 5xx, not that the flow works.
 
 ## Read the diff against the brief
 
