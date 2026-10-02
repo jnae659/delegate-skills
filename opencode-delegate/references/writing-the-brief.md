@@ -116,10 +116,31 @@ and the orchestrator re-runs everything anyway. The **orchestrator's gate** runs
 once, with the repo's parallel runner (e.g. `php artisan test --parallel --processes=8`), plus
 build/typecheck, then reviews the diff and commits.
 
+## Fast test infrastructure — check for it, use it, carry it into worktrees
+
+Two pieces of test infrastructure make both gates cheap. Check whether the repo has them (its
+`AGENTS.md`/`CLAUDE.md`, `phpunit.xml`, `scripts/`) and name them in the brief; if it lacks them
+on a large suite, suggest adding them to the human rather than living with slow gates.
+
+1. **Parallel test runner** (e.g. ParaTest via `php artisan test --parallel --processes=8`;
+   `pytest -n auto`; `jest --maxWorkers`). It splits the suite across workers, each with its own
+   database (Laravel: `<db>_test_1` … `_8`, auto-created) — same tests, same pass/fail, faster
+   (≈1.65× on a ~900-test Laravel suite). Workers can run out of memory; set the limit in the
+   runner config (Laravel: `<ini name="memory_limit" value="1G"/>` in `phpunit.xml`) instead of
+   per command. This is the **orchestrator's** full-suite command. Parallel suites are heavy on
+   the database server — don't run more than about two at once across worktrees.
+2. **Test schema dump** (Laravel: `database/schema/mysql-schema.sql`). Database-refreshing tests
+   load the finished schema in one step, and only migrations newer than the dump run on top,
+   instead of replaying hundreds of migration files per process. If some migrations seed rows
+   (permissions, lookup tables), the dump must keep those rows — a plain `schema:dump` only keeps
+   the `migrations` table, so use the repo's dump script if it has one (e.g.
+   `scripts/dump_test_schema.sh`). Regenerate it after adding migrations; tell the implementer to
+   do so in any brief that adds migrations.
+
 When the implementer works in a git worktree, make sure the worktree carries everything the test
-runner relies on that may be untracked or newer than the branch point — e.g. a schema dump
-(`database/schema/*.sql`). Without it, every database-refreshing test replays all migrations and a
-three-file test directory can take 10–20 minutes.
+runner relies on that may be untracked or newer than the branch point — above all the schema
+dump. Without it, every database-refreshing test replays all migrations and a three-file test
+directory can take 10–20 minutes.
 
 ## Honor the repo's conventions
 
